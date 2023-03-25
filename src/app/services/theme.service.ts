@@ -1,10 +1,13 @@
 import { Injectable } from "@angular/core";
+import { LocalStorageService } from "@app/services/local-storage.service";
 import { Observable, Subject } from "rxjs";
 
 export enum ThemeType {
   Dark,
   Light,
 }
+
+export const themeKeyName = "bia-theme";
 
 @Injectable({
   providedIn: "root",
@@ -22,11 +25,21 @@ export class ThemeService {
     return this._currentTheme$.asObservable();
   }
 
+  constructor(private localStorageService: LocalStorageService) {}
+
   /**
    * Set theme based on user device settings
+   * @param savedFirst - If it is true, then the saved value of theme overwrite the preference in the system
    */
-  matchMedia(): void {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+  matchMedia(savedFirst = true): void {
+    const savedTheme = this.localStorageService.getItem(themeKeyName);
+    if (savedFirst) {
+      if (savedTheme === ThemeType.Dark) {
+        this.setDark();
+      } else {
+        this.setLight();
+      }
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       this.setDark();
     } else {
       this.setLight();
@@ -38,7 +51,9 @@ export class ThemeService {
    */
   setDark(): void {
     document.documentElement.classList.add("dark");
-    this._currentTheme$.next(ThemeType.Dark);
+    const theme = ThemeType.Dark;
+    this._currentTheme$.next(theme);
+    this.localStorageService.setItem(themeKeyName, theme);
   }
 
   /**
@@ -46,6 +61,8 @@ export class ThemeService {
    */
   setLight(): void {
     document.documentElement.classList.remove("dark");
-    this._currentTheme$.next(ThemeType.Light);
+    const theme = ThemeType.Light;
+    this._currentTheme$.next(theme);
+    this.localStorageService.setItem(themeKeyName, theme);
   }
 }
