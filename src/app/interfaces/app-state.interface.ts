@@ -3,8 +3,8 @@ export interface IAppState {
 }
 
 export interface ILoadingState {
-  loadingLabel: string;
+  label: string;
   showProgress: boolean;
-  progressValue: number;
+  progress: number;
   isLoading: boolean;
 }
