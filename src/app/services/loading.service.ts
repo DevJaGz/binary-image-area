@@ -14,9 +14,9 @@ export class LoadingService {
   constructor(private stateService: StateService) {}
 
   /**
-   * Display to the user the spinner with a label and the progress bar
+   * Display to the user the loading modal
    * @param progress - Progress value
-   * @param label - Label to be shown
+   * @param label - Label to display
    */
   activeLoadingWithProgress(progress: number, label?: string): void {
     const { stateService } = this;
@@ -31,21 +31,25 @@ export class LoadingService {
   }
 
   /**
-   * Display to the user the spinner with a label and the progress bar
-   * @param progress - Progress value
-   * @param label - Label to be shown
+   * Display to the user the spinner with a label
+   * @param label - Label to display
    */
   activeLoading(label?: string): void {
     const { stateService } = this;
     const state: Partial<ILoadingState> = {
       isLoading: true,
-      showProgress: true,
+      showProgress: false,
       label,
     };
     stateService.setLoading(state);
     this.loadingState = state;
   }
 
+  /**
+   * Update the progress and label values
+   * @param progress - new Progress
+   * @param label - Label to display
+   */
   updateProgress(progress: number, label?: string): void {
     const { stateService, loadingState } = this;
     if (loadingState) {
@@ -57,6 +61,23 @@ export class LoadingService {
     }
   }
 
+  /**
+   * Update the label
+   * @param label - Label to display
+   */
+  updateLabel(label: string): void {
+    const { stateService, loadingState } = this;
+    if (loadingState) {
+      stateService.setLoading({
+        ...loadingState,
+        label: label || loadingState.label,
+      });
+    }
+  }
+
+  /**
+   * Hide the loading modal
+   */
   deactivateLoading(): void {
     const { stateService } = this;
     const state = {
