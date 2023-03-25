@@ -16,7 +16,7 @@ export class AppComponent implements AfterViewInit {
   /**
    * Loading state
    */
-  private isLoading$ = this.stateService.selectLoading$;
+  private isLoading$ = this.stateService.selectIsLoading$;
 
   /**
    * Flag to avoid NG0100: ExpressionChangedAfterItHasBeenCheckedError

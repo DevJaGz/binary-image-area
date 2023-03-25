@@ -24,7 +24,12 @@ export class ImageLoaderComponent {
     const { stateService } = this;
     const inputFile = eventTarget as HTMLInputElement;
     const file = inputFile.files[0];
-    stateService.setLoading(true);
+    stateService.setLoading({
+      isLoading: true,
+      loadingLabel: "Loading...",
+      progressValue: 0,
+      showProgress: true,
+    });
     this.imageLocaderService.upload(file).subscribe({
       next: ({ status, statusCode, file }) => {
         if (statusCode === 200) {
@@ -49,7 +54,7 @@ export class ImageLoaderComponent {
    */
   private uploadFinished(inputFile: HTMLInputElement): void {
     const { stateService } = this;
-    stateService.setLoading(false);
+    stateService.setLoading({ isLoading: false });
     inputFile.value = "";
   }
 }

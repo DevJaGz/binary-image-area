@@ -1,6 +1,9 @@
 import { Injectable } from "@angular/core";
-import { InitAppState } from "@app/constants/initialization.constant";
-import { IAppState } from "@app/interfaces/app-state.interface";
+import {
+  InitAppState,
+  InitLoadingState,
+} from "@app/constants/initialization.constant";
+import { IAppState, ILoadingState } from "@app/interfaces/app-state.interface";
 import { BehaviorSubject, map, Observable } from "rxjs";
 
 @Injectable({
@@ -22,16 +25,32 @@ export class StateService {
   /**
    * Notify the Loading state
    */
-  get selectLoading$(): Observable<boolean> {
-    return this._state$.asObservable().pipe(map((state) => state.isLoading));
+  get selectLoadingState$(): Observable<ILoadingState> {
+    return this._state$.asObservable().pipe(map((state) => state.loadingState));
+  }
+
+  /**
+   * Notify the is Loading value
+   */
+  get selectIsLoading$(): Observable<boolean> {
+    return this._state$
+      .asObservable()
+      .pipe(map((state) => state.loadingState.isLoading));
   }
 
   /**
    * Upade the loading state
-   * @param value - New value
+   * @param param - New state
    */
-  setLoading(value: boolean): void {
-    this.updateState({ isLoading: value });
+  setLoading(value: Partial<ILoadingState>): void {
+    if (value) {
+      this.updateState({
+        loadingState: {
+          ...InitLoadingState,
+          ...value,
+        },
+      });
+    }
   }
 
   /**
