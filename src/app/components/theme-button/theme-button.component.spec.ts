@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ImageLoaderComponent } from "./image-loader.component";
+import { ThemeButtonComponent } from "./theme-button.component";
 
-describe("ImageLoaderComponent", () => {
-  let component: ImageLoaderComponent;
-  let fixture: ComponentFixture<ImageLoaderComponent>;
+describe("ThemeButtonComponent", () => {
+  let component: ThemeButtonComponent;
+  let fixture: ComponentFixture<ThemeButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ImageLoaderComponent],
+      imports: [ThemeButtonComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ImageLoaderComponent);
+    fixture = TestBed.createComponent(ThemeButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -2,9 +2,9 @@ import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 
 @Component({
-  selector: "app-results",
+  selector: "app-theme-button",
   standalone: true,
   imports: [CommonModule],
-  templateUrl: "./results.component.html",
+  templateUrl: "./theme-button.component.html",
 })
-export class ResultsComponent {}
+export class ThemeButtonComponent {}

@@ -1,10 +1,10 @@
-import { Routes } from '@angular/router';
-import { HomeComponent } from '@app/pages/home/home.component';
+import { Routes } from "@angular/router";
+import { HomeComponent } from "@app/pages/home/home.component";
 
 export enum AppRouteName {
-  Blank = '',
-  Results = 'results',
-  NotFound = '**',
+  Blank = "",
+  Results = "results",
+  NotFound = "**",
 }
 
 export const AppRoutes: Routes = [
@@ -14,10 +14,7 @@ export const AppRoutes: Routes = [
   },
   {
     path: AppRouteName.Results,
-    loadComponent: () =>
-      import('@app/pages/results/results.component').then(
-        (c) => c.ResultsComponent
-      ),
+    loadComponent: () => import("@app/pages/results/results.component").then((c) => c.ResultsComponent),
   },
   {
     path: AppRouteName.NotFound,
