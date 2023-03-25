@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { ReportStatus } from "@app/constants/report.constant";
 import { ImageLoaderService } from "@app/services/image-loader.service";
 import { LoadingService } from "@app/services/loading.service";
-import { StateService } from "@app/services/state.service";
 
 @Component({
   selector: "app-results",
@@ -16,7 +16,7 @@ export class ResultsComponent implements OnInit {
   constructor(
     private imageLoaderService: ImageLoaderService,
     private loadingService: LoadingService,
-    private stateService: StateService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -26,6 +26,8 @@ export class ResultsComponent implements OnInit {
   private readImage(): void {
     const { loadingService, imageLoaderService } = this;
     loadingService.activeLoadingWithProgress(0, "Loading Image..");
+    console.log("DATA", this.route.snapshot.data);
+
     imageLoaderService.upload(null).subscribe({
       next: ({ status, statusCode, file, data, progress }) => {
         if (statusCode === 200) {
