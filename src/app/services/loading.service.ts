@@ -26,7 +26,7 @@ export class LoadingService {
       label,
       progress,
     };
-    stateService.setLoading(state);
+    stateService.setLoadingState(state);
     this.loadingState = state;
   }
 
@@ -41,7 +41,7 @@ export class LoadingService {
       showProgress: false,
       label,
     };
-    stateService.setLoading(state);
+    stateService.setLoadingState(state);
     this.loadingState = state;
   }
 
@@ -53,7 +53,7 @@ export class LoadingService {
   updateProgress(progress: number, label?: string): void {
     const { stateService, loadingState } = this;
     if (loadingState) {
-      stateService.setLoading({
+      stateService.setLoadingState({
         ...loadingState,
         progress: progress,
         label: label || loadingState.label,
@@ -68,7 +68,7 @@ export class LoadingService {
   updateLabel(label: string): void {
     const { stateService, loadingState } = this;
     if (loadingState) {
-      stateService.setLoading({
+      stateService.setLoadingState({
         ...loadingState,
         label: label || loadingState.label,
       });
@@ -83,7 +83,7 @@ export class LoadingService {
     const state = {
       isLoading: false,
     };
-    stateService.setLoading(state);
+    stateService.setLoadingState(state);
     this.loadingState = null;
   }
 }

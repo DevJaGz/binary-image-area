@@ -1,4 +1,8 @@
-import { IAppState, ILoadingState } from "@app/interfaces/app-state.interface";
+import {
+  IAppState,
+  IImageState,
+  ILoadingState,
+} from "@app/interfaces/app-state.interface";
 
 export const InitLoadingState: ILoadingState = {
   isLoading: false,
@@ -7,6 +11,11 @@ export const InitLoadingState: ILoadingState = {
   showProgress: false,
 };
 
+export const InitImageState: IImageState = {
+  file: null,
+};
+
 export const InitAppState: IAppState = {
   loadingState: InitLoadingState,
+  imageState: InitImageState,
 };

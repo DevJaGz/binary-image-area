@@ -3,7 +3,11 @@ import {
   InitAppState,
   InitLoadingState,
 } from "@app/constants/initialization.constant";
-import { IAppState, ILoadingState } from "@app/interfaces/app-state.interface";
+import {
+  IAppState,
+  IImageState,
+  ILoadingState,
+} from "@app/interfaces/app-state.interface";
 import { BehaviorSubject, map, Observable } from "rxjs";
 
 @Injectable({
@@ -14,6 +18,12 @@ export class StateService {
    * Handle the state
    */
   private _state$ = new BehaviorSubject<IAppState>(InitAppState);
+
+  /**
+   * =================================
+   *            SELECTORS
+   * =================================
+   */
 
   /**
    * Notify the App state
@@ -30,6 +40,13 @@ export class StateService {
   }
 
   /**
+   * Notify the Image state
+   */
+  get selectImageState$(): Observable<IImageState> {
+    return this._state$.asObservable().pipe(map((state) => state.imageState));
+  }
+
+  /**
    * Notify the is Loading value
    */
   get selectIsLoading$(): Observable<boolean> {
@@ -39,12 +56,44 @@ export class StateService {
   }
 
   /**
-   * Upade the loading state
-   * @param param - New state
+   * Current state in the service
    */
-  setLoading(value: Partial<ILoadingState>): void {
+  private get currentState(): IAppState {
+    return this._state$.value;
+  }
+
+  /**
+   * =================================
+   *            ACTIONS
+   * =================================
+   */
+
+  /**
+   * Update the image state
+   * @param value - New state
+   */
+  setImageState(value: Partial<IImageState>): void {
     if (value) {
+      const { currentState } = this;
       this.updateState({
+        ...currentState,
+        imageState: {
+          ...currentState.imageState,
+          ...value,
+        },
+      });
+    }
+  }
+
+  /**
+   * Upade the loading state
+   * @param value - New state
+   */
+  setLoadingState(value: Partial<ILoadingState>): void {
+    if (value) {
+      const { currentState } = this;
+      this.updateState({
+        ...currentState,
         loadingState: {
           ...InitLoadingState,
           ...value,
@@ -54,14 +103,10 @@ export class StateService {
   }
 
   /**
-   * Update the state based on a partial state value
-   * @param partialState - Value to update the state
+   * Update the state wit a new value
+   * @param value - Value to update the state
    */
-  private updateState(partialState: Partial<IAppState>): void {
-    const currentState = this._state$.value;
-    this._state$.next({
-      ...currentState,
-      ...partialState,
-    });
+  private updateState(value: IAppState): void {
+    this._state$.next(value);
   }
 }

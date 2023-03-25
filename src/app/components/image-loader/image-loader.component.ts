@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ReportStatus } from "@app/constants/report.constant";
-import { ImageLoaderService } from "@app/services/image-loader.service";
-import { LoadingService } from "@app/services/loading.service";
+import { Router } from "@angular/router";
+import { AppRouteName } from "@app/constants/app-routes.constant";
+import { StateService } from "@app/services/state.service";
 @Component({
   selector: "app-image-loader",
   standalone: true,
@@ -11,48 +11,19 @@ import { LoadingService } from "@app/services/loading.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageLoaderComponent {
-  constructor(
-    private imageLocaderService: ImageLoaderService,
-    private loadingService: LoadingService
-  ) {}
+  constructor(private router: Router, private stateService: StateService) {}
 
   /**
    * Called when a file is selected
    * @param eventTarget - Evento coming from the input
    */
   onUploadChange(eventTarget: EventTarget): void {
-    const { loadingService } = this;
+    const { stateService } = this;
     const inputFile = eventTarget as HTMLInputElement;
     const file = inputFile.files[0];
-    loadingService.activeLoadingWithProgress(0, "jumm!");
-    this.imageLocaderService.upload(file).subscribe({
-      next: ({ status, statusCode, file, data, progress }) => {
-        if (statusCode === 200) {
-          if (status === ReportStatus.InProgress) {
-            loadingService.updateProgress(progress);
-            console.log("Updating", progress);
-          } else if (status === ReportStatus.Done) {
-            console.log("Done", progress);
-            setTimeout(() => {
-              this.uploadFinished(inputFile);
-            }, 2000);
-          } else {
-            this.uploadFinished(inputFile);
-          }
-        } else {
-          this.uploadFinished(inputFile);
-        }
-      },
-    });
-  }
-
-  /**
-   * Hanlde the actions when the upload has finished
-   * @param inputFile - Input in the view
-   */
-  private uploadFinished(inputFile: HTMLInputElement): void {
-    const { loadingService } = this;
-    loadingService.deactivateLoading();
-    inputFile.value = "";
+    if (file) {
+      stateService.setImageState({ file });
+      this.router.navigate([AppRouteName.Results]);
+    }
   }
 }
