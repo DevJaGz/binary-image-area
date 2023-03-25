@@ -9,4 +9,5 @@ export interface IReport {
 export interface IUploadImageReport extends IReport {
   progress: number;
   data: string;
+  file: File;
 }

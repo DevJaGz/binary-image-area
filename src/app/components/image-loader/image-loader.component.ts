@@ -1,6 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ReportStatus } from "@app/constants/report.constant";
 import { ImageLoaderService } from "@app/services/image-loader.service";
+import { StateService } from "@app/services/state.service";
 @Component({
   selector: "app-image-loader",
   standalone: true,
@@ -9,17 +11,45 @@ import { ImageLoaderService } from "@app/services/image-loader.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageLoaderComponent {
-  constructor(private imageLocaderService: ImageLoaderService) {}
+  constructor(
+    private imageLocaderService: ImageLoaderService,
+    private stateService: StateService
+  ) {}
 
   /**
    * Called when a file is selected
    * @param eventTarget - Evento coming from the input
    */
   onUploadChange(eventTarget: EventTarget): void {
+    const { stateService } = this;
     const inputFile = eventTarget as HTMLInputElement;
     const file = inputFile.files[0];
+    stateService.setLoading(true);
     this.imageLocaderService.upload(file).subscribe({
-      next: console.log,
+      next: ({ status, statusCode, file }) => {
+        if (statusCode === 200) {
+          if (status === ReportStatus.InProgress) {
+            console.log("Upating", file);
+          } else if (status === ReportStatus.Done) {
+            console.log("Done", file);
+            this.uploadFinished(inputFile);
+          } else {
+            this.uploadFinished(inputFile);
+          }
+        } else {
+          this.uploadFinished(inputFile);
+        }
+      },
     });
+  }
+
+  /**
+   * Hanlde the actions when the upload has finished
+   * @param inputFile - Input in the view
+   */
+  private uploadFinished(inputFile: HTMLInputElement): void {
+    const { stateService } = this;
+    stateService.setLoading(false);
+    inputFile.value = "";
   }
 }

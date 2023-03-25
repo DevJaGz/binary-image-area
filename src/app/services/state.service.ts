@@ -30,7 +30,7 @@ export class StateService {
    * Upade the loading state
    * @param value - New value
    */
-  updateLoading(value: boolean): void {
+  setLoading(value: boolean): void {
     this.updateState({ isLoading: value });
   }
 

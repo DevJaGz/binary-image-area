@@ -23,6 +23,7 @@ export class ImageLoaderService {
       statusCode: ReportCode.OK,
       progress: 0,
       data: "",
+      file: null,
     };
   }
 
@@ -35,6 +36,7 @@ export class ImageLoaderService {
       statusCode: ReportCode.NullFile,
       progress: 0,
       data: "",
+      file: null,
     };
   }
 
@@ -48,6 +50,7 @@ export class ImageLoaderService {
    * @param file - File to upload
    */
   upload(file: File): Observable<IUploadImageReport> {
+    this.resetReport();
     return this.handleUploading(file);
   }
 
@@ -64,7 +67,7 @@ export class ImageLoaderService {
     const { fileService, factoryService } = this;
     const reporter = factoryService.createImageUploadReporter();
     const reader = fileService.readAsDataURL(file);
-    this.handleOnLoadStart(reader, reporter);
+    this.handleOnLoadStart(reader, reporter, file);
     this.handleOnProgress(reader, reporter);
     this.handleOnLoad(reader, reporter);
     this.handleOnAbort(reader, reporter);
@@ -80,9 +83,15 @@ export class ImageLoaderService {
    */
   private handleOnLoadStart(
     reader: FileReader,
-    reporter: Subject<IUploadImageReport>
+    reporter: Subject<IUploadImageReport>,
+    file: File
   ): void {
-    reader.onloadstart = () => reporter.next(this.report);
+    reader.onloadstart = () => {
+      const report = this.updateReport({
+        file,
+      });
+      reporter.next(report);
+    };
   }
 
   /**
@@ -166,6 +175,13 @@ export class ImageLoaderService {
       reporter.error(report);
       reporter.complete();
     };
+  }
+
+  /**
+   * Reset the current report
+   */
+  private resetReport(): void {
+    this.report = this.initialReport;
   }
 
   /**
