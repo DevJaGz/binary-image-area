@@ -2,10 +2,10 @@
   <div
     class="flex flex-col justify-center items-center bg-gray-100 dark:bg-zinc-900 px-20 py-14 rounded"
   >
-    <div role="status" class="flex flex-col justify-center items-center mb-4">
+    <div role="status" class="flex flex-col justify-center items-center">
       <svg
         aria-hidden="true"
-        class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
+        class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -19,8 +19,14 @@
           fill="currentFill"
         />
       </svg>
-      <span class="dark:text-gray-100 mt-3 font-light">{{ progressText }}</span>
+      <span class="dark:text-gray-100 mt-3 font-light text-center">{{
+        label
+      }}</span>
     </div>
-    <app-progress-bar class="w-40 md:w-52"></app-progress-bar>
+    <app-progress-bar
+      class="w-40 md:w-52 mt-4"
+      [value]="progress"
+      *ngIf="showProgress"
+    ></app-progress-bar>
   </div>
 </div>

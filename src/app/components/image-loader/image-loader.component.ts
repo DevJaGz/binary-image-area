@@ -24,7 +24,7 @@ export class ImageLoaderComponent {
     const { loadingService } = this;
     const inputFile = eventTarget as HTMLInputElement;
     const file = inputFile.files[0];
-    loadingService.activeLoadingWithProgress(0, "Loading...");
+    loadingService.activeLoadingWithProgress(0, "jumm!");
     this.imageLocaderService.upload(file).subscribe({
       next: ({ status, statusCode, file, data, progress }) => {
         if (statusCode === 200) {
