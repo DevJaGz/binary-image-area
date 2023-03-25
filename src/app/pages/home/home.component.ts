@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ImageLoaderComponent } from "@app/components/image-loader/image-loader.component";
 
 @Component({
@@ -7,5 +7,6 @@ import { ImageLoaderComponent } from "@app/components/image-loader/image-loader.
   standalone: true,
   imports: [CommonModule, ImageLoaderComponent],
   templateUrl: "./home.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {}

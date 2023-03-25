@@ -1,5 +1,11 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from "@angular/core";
 import { ThemeService, ThemeType } from "@app/services/theme.service";
 import { map, Subject, takeUntil } from "rxjs";
 
@@ -8,6 +14,7 @@ import { map, Subject, takeUntil } from "rxjs";
   standalone: true,
   imports: [CommonModule],
   templateUrl: "./theme-button.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThemeButtonComponent implements OnInit, OnDestroy {
   /**

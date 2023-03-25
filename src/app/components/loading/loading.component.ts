@@ -2,10 +2,10 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
-  selector: "app-results",
+  selector: "app-loading",
   standalone: true,
   imports: [CommonModule],
-  templateUrl: "./results.component.html",
+  templateUrl: "./loading.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResultsComponent {}
+export class LoadingComponent {}

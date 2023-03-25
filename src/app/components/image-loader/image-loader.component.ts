@@ -1,11 +1,12 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ImageLoaderService } from "@app/services/image-loader.service";
 @Component({
   selector: "app-image-loader",
   standalone: true,
   imports: [CommonModule],
   templateUrl: "./image-loader.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageLoaderComponent {
   constructor(private imageLocaderService: ImageLoaderService) {}
@@ -19,9 +20,6 @@ export class ImageLoaderComponent {
     const file = inputFile.files[0];
     this.imageLocaderService.upload(file).subscribe({
       next: console.log,
-      complete: () => {
-        console.log("COMPLETE");
-      },
     });
   }
 }
