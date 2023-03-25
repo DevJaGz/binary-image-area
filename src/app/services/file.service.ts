@@ -15,7 +15,7 @@ export class FileService {
    * @param file - File to read
    * @returns - Reader
    */
-  readFile(file: File): FileReader {
+  readAsDataURL(file: File): FileReader {
     const { factoryService } = this;
     const reader = factoryService.createFileReader();
     reader.readAsDataURL(file);

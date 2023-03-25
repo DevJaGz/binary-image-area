@@ -61,9 +61,9 @@ export class ImageLoaderService {
       return of(this.nullFileReport);
     }
 
-    const { fileService: fileLoaderService, factoryService } = this;
+    const { fileService, factoryService } = this;
     const reporter = factoryService.createImageUploadReporter();
-    const reader = fileLoaderService.readFile(file);
+    const reader = fileService.readAsDataURL(file);
     this.handleOnLoadStart(reader, reporter);
     this.handleOnProgress(reader, reporter);
     this.handleOnLoad(reader, reporter);
