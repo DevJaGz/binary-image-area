@@ -3,18 +3,36 @@ import { ReportCode, ReportStatus } from "@app/constants/report.constant";
 import { IUploadImageReport } from "@app/interfaces/reporter.interface";
 import { FactoryService } from "@app/services/factory.service";
 import { FileService } from "@app/services/file.service";
-import { Observable, Subject } from "rxjs";
+import { Observable, of, Subject } from "rxjs";
 
 @Injectable({
   providedIn: "root",
 })
 export class ImageLoaderService {
+  /**
+   * Reporter to notify the image uploading report
+   */
   private report: IUploadImageReport = this.initialReport;
 
+  /**
+   * Initial report
+   */
   get initialReport(): IUploadImageReport {
     return {
       status: ReportStatus.InProgress,
       statusCode: ReportCode.OK,
+      progress: 0,
+      data: "",
+    };
+  }
+
+  /**
+   * Report when the file is null
+   */
+  get nullFileReport(): IUploadImageReport {
+    return {
+      status: ReportStatus.Failed,
+      statusCode: ReportCode.NullFile,
       progress: 0,
       data: "",
     };
@@ -34,11 +52,15 @@ export class ImageLoaderService {
   }
 
   /**
-   * Notify the progress of uploading the image
+   * Handle the image uploading and notify the process
    * @param file - File to upload
    * @returns Report of the uploading
    */
   private handleUploading(file: File): Observable<IUploadImageReport> {
+    if (!file) {
+      return of(this.nullFileReport);
+    }
+
     const { fileService: fileLoaderService, factoryService } = this;
     const reporter = factoryService.createImageUploadReporter();
     const reader = fileLoaderService.readFile(file);
@@ -47,9 +69,15 @@ export class ImageLoaderService {
     this.handleOnLoad(reader, reporter);
     this.handleOnAbort(reader, reporter);
     this.handleOnError(reader, reporter);
+
     return reporter.asObservable();
   }
 
+  /**
+   * Handle when the uploading of the image start
+   * @param reader - Object to assign the event
+   * @param reporter - Reporter that generate the report
+   */
   private handleOnLoadStart(
     reader: FileReader,
     reporter: Subject<IUploadImageReport>
@@ -57,6 +85,11 @@ export class ImageLoaderService {
     reader.onloadstart = () => reporter.next(this.report);
   }
 
+  /**
+   * Handle when the uploading of the image is in progress
+   * @param reader - Object to assign the event
+   * @param reporter - Reporter that generate the report
+   */
   private handleOnProgress(
     reader: FileReader,
     reporter: Subject<IUploadImageReport>
@@ -72,6 +105,11 @@ export class ImageLoaderService {
     };
   }
 
+  /**
+   * Handle when the uploading of the image has finished
+   * @param reader - Object to assign the event
+   * @param reporter - Reporter that generate the report
+   */
   private handleOnLoad(
     reader: FileReader,
     reporter: Subject<IUploadImageReport>
@@ -87,6 +125,11 @@ export class ImageLoaderService {
     };
   }
 
+  /**
+   * Handle when the uploading of the image has been aborted
+   * @param reader - Object to assign the event
+   * @param reporter - Reporter that generate the report
+   */
   private handleOnAbort(
     reader: FileReader,
     reporter: Subject<IUploadImageReport>
@@ -98,9 +141,15 @@ export class ImageLoaderService {
         error: new Error("File read aborted"),
       });
       reporter.error(report);
+      reporter.complete();
     };
   }
 
+  /**
+   * Handle when the uploading of the image has failed
+   * @param reader - Object to assign the events
+   * @param reporter - Reporter that generate the report
+   */
   private handleOnError(
     reader: FileReader,
     reporter: Subject<IUploadImageReport>
@@ -115,9 +164,15 @@ export class ImageLoaderService {
         error: error,
       });
       reporter.error(report);
+      reporter.complete();
     };
   }
 
+  /**
+   * Update the report
+   * @param partialReport - Partial data for the report
+   * @returns - Report updated
+   */
   private updateReport(
     partialReport: Partial<IUploadImageReport>
   ): IUploadImageReport {

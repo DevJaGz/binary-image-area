@@ -6,12 +6,14 @@ export enum ReportStatus {
 
 export enum ReportCode {
   OK = 200,
-  Aborted = 400,
+  NullFile = 400,
+  Aborted = 420,
   ReadingFileError = 511,
 }
 
 export const ReportCodeMessage: { [key in ReportCode]: string } = {
-  [ReportCode.OK]: "Working correctly",
-  [ReportCode.Aborted]: "Process Aborted",
+  [ReportCode.OK]: "Working Correctly",
   [ReportCode.ReadingFileError]: "Unknown Error",
+  [ReportCode.NullFile]: "File is Null",
+  [ReportCode.Aborted]: "Process Aborted",
 };
