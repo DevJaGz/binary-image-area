@@ -35,8 +35,8 @@ export class StateService {
   }
 
   /**
-   * Update the state based on partial state data
-   * @param partialState - Data to update the state
+   * Update the state based on a partial state value
+   * @param partialState - Value to update the state
    */
   private updateState(partialState: Partial<IAppState>): void {
     const currentState = this._state$.value;
