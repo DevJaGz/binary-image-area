@@ -26,19 +26,21 @@ export class ResultsComponent implements OnInit {
   private readImage(): void {
     const { loadingService, imageLoaderService } = this;
     loadingService.activeLoadingWithProgress(0, "Loading Image..");
-    console.log("DATA", this.route.snapshot.data);
-
-    imageLoaderService.upload(null).subscribe({
-      next: ({ status, statusCode, file, data, progress }) => {
+    const imageFile = this.route.snapshot.data["imageFile"] as File;
+    imageLoaderService.upload(imageFile).subscribe({
+      next: ({ status, statusCode, data, progress }) => {
         if (statusCode === 200) {
           if (status === ReportStatus.InProgress) {
             loadingService.updateProgress(progress);
           } else if (status === ReportStatus.Done) {
             this.loadingService.deactivateLoading();
+            // TODO: Show success message to the user
           } else {
+            // TODO: Show error message to the user
             this.loadingService.deactivateLoading();
           }
         } else {
+          // TODO: Show error message to the user
           this.loadingService.deactivateLoading();
         }
       },
