@@ -58,7 +58,7 @@ export class StateService {
   /**
    * Current state in the service
    */
-  private get currentState(): IAppState {
+  get currentState(): IAppState {
     return this._state$.value;
   }
 
