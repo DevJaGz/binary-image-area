@@ -4,7 +4,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   OnInit,
+  Renderer2,
+  ViewChild,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRouteName } from "@app/constants/app-routes.constant";
@@ -20,10 +23,22 @@ import { StateService } from "@app/services/state.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResultsComponent implements OnInit, AfterViewInit {
+  @ViewChild("canvasRef") canvasRef: ElementRef<HTMLCanvasElement>;
   /**
    * Flag to notify if the image could be read
    */
   isImageRead = false;
+
+  /**
+   * Canvas element in the view
+   */
+  get canvas(): HTMLCanvasElement {
+    const { canvasRef } = this;
+    if (canvasRef) {
+      return canvasRef.nativeElement;
+    }
+    return null;
+  }
 
   constructor(
     private imageService: ImageService,
@@ -31,11 +46,12 @@ export class ResultsComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private stateService: StateService,
     private router: Router,
+    private render: Renderer2,
     private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    const { loadingService, imageService } = this;
+    const { loadingService, imageService, cd } = this;
     const imageFile = this.route.snapshot.data["imageFile"] as File;
     loadingService.activeLoading("Reading Image...");
     imageService.read(imageFile).subscribe({
@@ -45,18 +61,18 @@ export class ResultsComponent implements OnInit, AfterViewInit {
           alert("Not valid Image");
           this.returnHome();
         }
+
         this.isImageRead = isImageRead;
-        this.cd.markForCheck();
+        cd.markForCheck();
         loadingService.deactivateLoading();
       },
     });
   }
 
   ngAfterViewInit(): void {
-    const { isImageRead } = this;
-    if (isImageRead) {
-      this.renderImage();
-    }
+    const { isImageRead, render, canvas } = this;
+    console.log("canvas", canvas);
+    render.listen(canvas, "load", this.renderImage);
   }
 
   /**
@@ -70,7 +86,8 @@ export class ResultsComponent implements OnInit, AfterViewInit {
    * Render the image
    */
   private renderImage(): void {
-    console.log("render image");
+    const { render, canvas, imageService } = this;
+    console.log("render image", canvas);
   }
 
   /**

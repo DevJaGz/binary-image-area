@@ -1,12 +1,12 @@
 <main
   class="pt-24 px-4 lg:px-10 h-full max-y-full overflow-y-auto"
-  *ngIf="isImageRead"
+  [hidden]="!isImageRead"
 >
   <div class="max-w-5xl mx-auto h-full">
     <h4 class="font-semibold text-xl">Let's see the results!</h4>
     <section class="mt-16 flex flex-col lg:flex-row-reverse gap-4">
       <canvas
-        #canvasRendered
+        #canvasRef
         class="bg-neutral-200 dark:bg-neutral-600 w-full lg:max-w-xl"
       ></canvas>
       <div class="px-0 lg:px-4 flex-1"> MENU </div>
