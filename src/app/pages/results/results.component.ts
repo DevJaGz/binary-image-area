@@ -39,6 +39,8 @@ export class ResultsComponent implements AfterViewInit {
     return null;
   }
 
+  area = null;
+
   constructor(
     private imageService: ImageService,
     private loadingService: LoadingService,
@@ -81,8 +83,8 @@ export class ResultsComponent implements AfterViewInit {
    * Render data in the canvas
    */
   private renderResults(): void {
-    const { canvas, imageService, cd } = this;
-    imageService.renderResults(canvas);
+    const { canvas, imageService } = this;
+    this.area = imageService.renderResults(canvas);
   }
 
   /**

@@ -46,26 +46,30 @@ export class ImageService {
     return isImageRead$.asObservable();
   }
 
-  renderResults(viewCanvas: HTMLCanvasElement): void {
-    this.renderImage(viewCanvas);
-    this.calculateArea();
+  renderResults(viewCanvas: HTMLCanvasElement): number {
+    const [area, dotCanvas] = this.calculateArea();
+    this.renderImage(viewCanvas, dotCanvas);
+    return area;
   }
 
-  private renderImage(viewCanvas: HTMLCanvasElement): void {
-    const { image } = this;
+  private renderImage(
+    viewCanvas: HTMLCanvasElement,
+    dotCanvas: HTMLCanvasElement
+  ): void {
+    const { image, naturalCanvas } = this;
     const { width, height } = image;
     const viewContext = viewCanvas.getContext("2d");
     const canvasWidth = viewCanvas.width;
     const aspectRatio = width / height;
     const heighScaled = canvasWidth / aspectRatio;
     viewCanvas.height = heighScaled;
-    viewContext.drawImage(image, 0, 0, canvasWidth, heighScaled);
+    viewContext.drawImage(naturalCanvas, 0, 0, canvasWidth, heighScaled);
+    viewContext.drawImage(dotCanvas, 0, 0, canvasWidth, heighScaled);
   }
 
-  private calculateArea(): void {
+  private calculateArea(): [number, HTMLCanvasElement] {
     const { areaCalculatorService, naturalCanvas, naturalCanvasContext } = this;
-    const { width, height } = naturalCanvas;
-    areaCalculatorService.imageArea(naturalCanvasContext, width, height);
+    return areaCalculatorService.imageArea(naturalCanvas, naturalCanvasContext);
   }
 
   /**

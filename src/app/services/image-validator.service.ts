@@ -25,6 +25,15 @@ export class ImageValidatorService {
   }
 
   /**
+   * Check if the binary pixel is black color
+   * @param value - Value to compare
+   * @returns
+   */
+  isBlackPixel(value: number): boolean {
+    return value < 128;
+  }
+
+  /**
    * Check if the data belogns a binary image
    * @param param - Image data
    * @returns - True if is a binary image
