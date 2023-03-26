@@ -65,12 +65,19 @@ export class AreaCalculatorService {
         const dotsRed = dotsData[i];
         const isNaturalBlackPixel =
           imageValidatorService.isBlackPixel(naturalRed);
-        const isDotBlackPixel = imageValidatorService.isBlackPixel(dotsRed);
+        const isDotBlackPixel = imageValidatorService.isBlackPixel(
+          dotsRed - 255
+        );
         if (isNaturalBlackPixel && isNaturalBlackPixel === isDotBlackPixel) {
           dotsMatached += 1;
         }
       }
+
       const area = naturalWidth * naturalHeigth * (dotsMatached / numDots);
+      console.log("Dots matched", dotsMatached);
+      console.log("numDots", numDots);
+      console.log("area", area);
+      console.log("Iterations", naturalDataLen);
       return Number(area.toFixed(2));
     }
     return 0;
