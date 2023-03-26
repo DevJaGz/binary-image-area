@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
+import { AreaCalculatorService } from "@app/services/area-calculator.service";
 import { FactoryService } from "@app/services/factory.service";
 import { ImageValidatorService } from "@app/services/image-validator.service";
+import { getImageDataUtil } from "@app/utils/image.util";
 import { Observable, Subject } from "rxjs";
 
 @Injectable({
@@ -24,7 +26,8 @@ export class ImageService {
 
   constructor(
     private validatorService: ImageValidatorService,
-    private factoryService: FactoryService
+    private factoryService: FactoryService,
+    private areaCalculatorService: AreaCalculatorService
   ) {}
 
   /**
@@ -43,7 +46,26 @@ export class ImageService {
     return isImageRead$.asObservable();
   }
 
-  renderCanvas(viewCanvas: HTMLCanvasElement): void {}
+  renderResults(viewCanvas: HTMLCanvasElement): void {
+    this.renderImage(viewCanvas);
+    this.calculateArea();
+  }
+
+  private renderImage(viewCanvas: HTMLCanvasElement): void {
+    const { image } = this;
+    const { width, height } = image;
+    const viewContext = viewCanvas.getContext("2d");
+    const canvasWidth = viewCanvas.width;
+    const aspectRatio = width / height;
+    const heighScaled = canvasWidth / aspectRatio;
+    viewCanvas.height = heighScaled;
+    viewContext.drawImage(image, 0, 0, canvasWidth, heighScaled);
+  }
+
+  private calculateArea(): void {
+    const { areaCalculatorService, image } = this;
+    areaCalculatorService.imageArea(image);
+  }
 
   /**
    *  Handle when the uploading of the image has finished
@@ -91,7 +113,9 @@ export class ImageService {
    */
   private initializeCanvasContext(image: HTMLImageElement): void {
     const { factoryService } = this;
-    const [canvas, context] = factoryService.createCanvas2D();
+    const [canvas, context] = factoryService.createCanvas2D({
+      willReadFrequently: true,
+    });
     const { width, height } = image;
     canvas.width = width;
     canvas.height = height;
@@ -106,12 +130,10 @@ export class ImageService {
    */
   private getImageData(): ImageData {
     const { naturalCanvas, naturalCanvasContext } = this;
-    const imageData = naturalCanvasContext.getImageData(
-      0,
-      0,
+    return getImageDataUtil(
+      naturalCanvasContext,
       naturalCanvas.width,
       naturalCanvas.height
     );
-    return imageData;
   }
 }

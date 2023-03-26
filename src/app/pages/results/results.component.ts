@@ -62,7 +62,7 @@ export class ResultsComponent implements AfterViewInit {
           loadingService.deactivateLoading();
           return;
         }
-        this.renderCanvas();
+        this.renderResults();
         this.isImageRead = isImageRead;
         cd.markForCheck();
         loadingService.deactivateLoading();
@@ -80,10 +80,9 @@ export class ResultsComponent implements AfterViewInit {
   /**
    * Render data in the canvas
    */
-  private renderCanvas(): void {
-    const { render, canvas, imageService } = this;
-    console.log("render image", canvas);
-    imageService.renderCanvas(canvas);
+  private renderResults(): void {
+    const { canvas, imageService, cd } = this;
+    imageService.renderResults(canvas);
   }
 
   /**
