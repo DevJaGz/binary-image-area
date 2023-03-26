@@ -1,5 +1,11 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRouteName } from "@app/constants/app-routes.constant";
 import { ImageService } from "@app/services/image.service";
@@ -13,13 +19,19 @@ import { StateService } from "@app/services/state.service";
   templateUrl: "./results.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResultsComponent implements OnInit {
+export class ResultsComponent implements OnInit, AfterViewInit {
+  /**
+   * Flag to notify if the image could be read
+   */
+  isImageRead = false;
+
   constructor(
     private imageService: ImageService,
     private loadingService: LoadingService,
     private route: ActivatedRoute,
     private stateService: StateService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -27,17 +39,24 @@ export class ResultsComponent implements OnInit {
     const imageFile = this.route.snapshot.data["imageFile"] as File;
     loadingService.activeLoading("Reading Image...");
     imageService.read(imageFile).subscribe({
-      next: (isValid) => {
-        if (isValid) {
-          this.renderImage();
-        } else {
+      next: (isImageRead) => {
+        if (!isImageRead) {
           // TODO: Show a stylized message
           alert("Not valid Image");
           this.returnHome();
         }
+        this.isImageRead = isImageRead;
+        this.cd.markForCheck();
         loadingService.deactivateLoading();
       },
     });
+  }
+
+  ngAfterViewInit(): void {
+    const { isImageRead } = this;
+    if (isImageRead) {
+      this.renderImage();
+    }
   }
 
   /**
