@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { AppRouteName } from "@app/constants/app-routes.constant";
+import { LoadingService } from "@app/services/loading.service";
 import { StateService } from "@app/services/state.service";
 @Component({
   selector: "app-image-loader",
@@ -11,7 +12,11 @@ import { StateService } from "@app/services/state.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageLoaderComponent {
-  constructor(private router: Router, private stateService: StateService) {}
+  constructor(
+    private loadingService: LoadingService,
+    private router: Router,
+    private stateService: StateService
+  ) {}
 
   /**
    * Called when a file is selected
@@ -24,6 +29,7 @@ export class ImageLoaderComponent {
     if (file) {
       stateService.setImageState({ file });
       this.router.navigate([AppRouteName.Results]);
+      this.loadingService.activeLoading("Image uploaded...");
     }
   }
 }

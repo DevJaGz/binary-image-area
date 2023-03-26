@@ -1,6 +1,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { AppRouteName } from "@app/constants/app-routes.constant";
+import { LoadingService } from "@app/services/loading.service";
 import { StateService } from "@app/services/state.service";
 
 /**
@@ -11,6 +12,7 @@ import { StateService } from "@app/services/state.service";
 export const seeResultsGuard = (route: ActivatedRouteSnapshot) => {
   const router = inject(Router);
   const service = inject(StateService);
+  const loadingService = inject(LoadingService);
   const imageFile = service.currentState.imageState.file;
   const hasImageFile = Boolean(imageFile);
   if (hasImageFile) {
@@ -18,8 +20,10 @@ export const seeResultsGuard = (route: ActivatedRouteSnapshot) => {
       ...route.data,
       imageFile,
     };
+
     return true;
   }
+  loadingService.deactivateLoading();
   router.navigate([AppRouteName.Home]);
   return false;
 };
