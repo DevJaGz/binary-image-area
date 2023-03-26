@@ -1,0 +1,44 @@
+html,
+body {
+  height: 100%;
+  font-family: "Raleway", sans-serif;
+}
+
+
+// Scroll bar size
+*::-webkit-scrollbar {
+  height: 1rem;
+  width: 0.5rem;
+}
+
+
+// Scroll bar background
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.dark *::-webkit-scrollbar-track {
+  background-color: theme('colors.neutral.800');
+}
+
+// Scroll bar indicator
+*::-webkit-scrollbar-thumb {
+  background-color: theme('colors.neutral.200');
+  border-color: theme('colors.neutral.200');
+  border-radius: 9999px;
+  border-width: 1px;
+
+}
+
+.dark *::-webkit-scrollbar-thumb {
+  background-color: theme('colors.neutral.700');
+  border-color: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: theme('colors.neutral.300') !important;
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+  background-color: theme('colors.neutral.900') !important;
+}
