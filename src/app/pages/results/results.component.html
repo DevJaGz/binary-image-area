@@ -5,11 +5,14 @@
   <div class="max-w-5xl mx-auto h-full">
     <h4 class="font-semibold text-xl">Let's see the results!</h4>
     <section class="mt-16 flex flex-col lg:flex-row-reverse gap-4">
-      <canvas
-        #canvasRef
-        class="bg-neutral-200 dark:bg-neutral-600 w-full lg:max-w-xl"
-      ></canvas>
-      <div class="px-0 lg:px-4 flex-1"> MENU </div>
+      <div class="flex flex-col gap-4">
+        <h4 class="text-right">Image Selected</h4>
+        <canvas
+          #canvasRef
+          class="bg-neutral-200 mx-auto ring-1 ring-slate-200 dark:bg-neutral-600 w-72 sm:w-80"
+        ></canvas>
+      </div>
+      <div class="px-0 mt-10 lg:mt-0 lg:px-4 flex-1"> Area: --- </div>
     </section>
     <footer class="mt-24 pb-10 flex justify-end">
       <button

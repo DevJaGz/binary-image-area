@@ -63,8 +63,9 @@ export class ImageService {
   }
 
   private calculateArea(): void {
-    const { areaCalculatorService, image } = this;
-    areaCalculatorService.imageArea(image);
+    const { areaCalculatorService, naturalCanvas, naturalCanvasContext } = this;
+    const { width, height } = naturalCanvas;
+    areaCalculatorService.imageArea(naturalCanvasContext, width, height);
   }
 
   /**

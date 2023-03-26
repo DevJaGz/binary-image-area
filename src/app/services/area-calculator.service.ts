@@ -8,20 +8,29 @@ import { getImageDataUtil } from "@app/utils/image.util";
 export class AreaCalculatorService {
   constructor(private factoryService: FactoryService) {}
 
-  imageArea(image: HTMLImageElement): void {
-    const { factoryService } = this;
-    const [canvas, context] = factoryService.createCanvas2D({
-      willReadFrequently: true,
-    });
-    const { width, height } = image;
-    canvas.width = width;
-    canvas.height = height;
-    context.drawImage(image, 0, 0, width, height);
-    this.drawRandomPoints();
-    const imageData = this.getImageData(context, width, height);
+  imageArea(
+    context: CanvasRenderingContext2D,
+    width: number,
+    height: number
+  ): void {
+    this.drawRandomPoints(context, width, height);
+    // const imageData = this.getImageData(context, width, height);
   }
 
-  private drawRandomPoints(): void {}
+  private drawRandomPoints(
+    context: CanvasRenderingContext2D,
+    width: number,
+    height: number
+  ): void {
+    const numDots = 1000;
+
+    for (let i = 0; i < numDots; i++) {
+      const x = Math.floor(Math.random() * width);
+      const y = Math.floor(Math.random() * height);
+      context.fillStyle = "red";
+      context.fillRect(x, y, 1, 1);
+    }
+  }
 
   private getImageData(
     conext: CanvasRenderingContext2D,
