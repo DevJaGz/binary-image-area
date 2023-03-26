@@ -43,7 +43,7 @@ export class ImageService {
     return isImageRead$.asObservable();
   }
 
-  calculateArea(): void {}
+  renderCanvas(viewCanvas: HTMLCanvasElement): void {}
 
   /**
    *  Handle when the uploading of the image has finished
@@ -91,11 +91,10 @@ export class ImageService {
    */
   private initializeCanvasContext(image: HTMLImageElement): void {
     const { factoryService } = this;
-    const canvas = factoryService.createCanvas();
+    const [canvas, context] = factoryService.createCanvas2D();
     const { width, height } = image;
     canvas.width = width;
     canvas.height = height;
-    const context = canvas.getContext("2d");
     context.drawImage(image, 0, 0, width, height);
     this.naturalCanvas = canvas;
     this.naturalCanvasContext = context;

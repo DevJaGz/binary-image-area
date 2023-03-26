@@ -83,7 +83,7 @@ export class ResultsComponent implements AfterViewInit {
   private renderCanvas(): void {
     const { render, canvas, imageService } = this;
     console.log("render image", canvas);
-    imageService.calculateArea();
+    imageService.renderCanvas(canvas);
   }
 
   /**

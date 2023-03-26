@@ -34,7 +34,8 @@ export class FactoryService {
    * Factory to generate a canvas element
    * @returns - Canva element
    */
-  createCanvas(): HTMLCanvasElement {
-    return document.createElement("canvas");
+  createCanvas2D(): [HTMLCanvasElement, CanvasRenderingContext2D] {
+    const canvas = document.createElement("canvas");
+    return [canvas, canvas.getContext("2d")];
   }
 }
