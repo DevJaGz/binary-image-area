@@ -5,7 +5,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  OnInit,
   Renderer2,
   ViewChild,
 } from "@angular/core";
@@ -22,7 +21,7 @@ import { StateService } from "@app/services/state.service";
   templateUrl: "./results.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResultsComponent implements OnInit, AfterViewInit {
+export class ResultsComponent implements AfterViewInit {
   @ViewChild("canvasRef") canvasRef: ElementRef<HTMLCanvasElement>;
   /**
    * Flag to notify if the image could be read
@@ -50,7 +49,7 @@ export class ResultsComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     const { loadingService, imageService, cd } = this;
     const imageFile = this.route.snapshot.data["imageFile"] as File;
     loadingService.activeLoading("Reading Image...");
@@ -60,19 +59,15 @@ export class ResultsComponent implements OnInit, AfterViewInit {
           // TODO: Show a stylized message
           alert("Not valid Image");
           this.returnHome();
+          loadingService.deactivateLoading();
+          return;
         }
-
+        this.renderCanvas();
         this.isImageRead = isImageRead;
         cd.markForCheck();
         loadingService.deactivateLoading();
       },
     });
-  }
-
-  ngAfterViewInit(): void {
-    const { isImageRead, render, canvas } = this;
-    console.log("canvas", canvas);
-    render.listen(canvas, "load", this.renderImage);
   }
 
   /**
@@ -83,11 +78,12 @@ export class ResultsComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Render the image
+   * Render data in the canvas
    */
-  private renderImage(): void {
+  private renderCanvas(): void {
     const { render, canvas, imageService } = this;
     console.log("render image", canvas);
+    imageService.calculateArea();
   }
 
   /**

@@ -43,6 +43,8 @@ export class ImageService {
     return isImageRead$.asObservable();
   }
 
+  calculateArea(): void {}
+
   /**
    *  Handle when the uploading of the image has finished
    * @param isImageRead$ - Handler that notify if the image was read
