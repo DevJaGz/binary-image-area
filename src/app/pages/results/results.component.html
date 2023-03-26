@@ -1,4 +1,4 @@
-<main class="pt-24 px-4 md:px-10 h-full">
+<main class="pt-24 px-4 p md:px-10 h-full max-y-full overflow-y-auto">
   <div class="max-w-5xl mx-auto h-full">
     <h4 class="font-semibold text-xl :mdtext-2xl">Let's see the results!</h4>
     <section class="mt-16 flex flex-col lg:flex-row-reverse">
@@ -8,5 +8,30 @@
       ></canvas>
       <div class="px-4 flex-1"> MENU </div>
     </section>
+    <footer class="mt-24 pb-10 flex justify-end">
+      <button
+        (click)="onTryAnotherBtn()"
+        type="button"
+        class="flex flex-nowrap gap-2 justify-center items-center text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 focus:ring-4 focus:ring-neutral-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 dark:focus:ring-neutral-700"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-arrows-exchange"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+          <path d="M7 10h14l-4 -4"></path>
+          <path d="M17 14h-14l4 4"></path>
+        </svg>
+        Try Another
+      </button>
+    </footer>
   </div>
 </main>

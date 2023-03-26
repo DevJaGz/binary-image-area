@@ -40,10 +40,23 @@ export class ResultsComponent implements OnInit {
     });
   }
 
-  renderImage(): void {
+  /**
+   * Called when try another button is clicked
+   */
+  onTryAnotherBtn(): void {
+    this.returnHome();
+  }
+
+  /**
+   * Render the image
+   */
+  private renderImage(): void {
     console.log("render image");
   }
 
+  /**
+   * Move the user to home
+   */
   private returnHome(): void {
     this.stateService.setImageState({
       file: null,
