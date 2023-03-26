@@ -11,3 +11,7 @@ export interface IUploadImageReport extends IReport {
   data: string;
   file: File;
 }
+
+export interface ImageReport extends IReport {
+  progress: number;
+}

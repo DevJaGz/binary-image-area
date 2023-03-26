@@ -10,7 +10,7 @@ import { Observable, of, Subject } from "rxjs";
 })
 export class ImageLoaderService {
   /**
-   * Reporter to notify the image uploading report
+   * Report to notify the image uploading report
    */
   private report: IUploadImageReport = this.initialReport;
 
