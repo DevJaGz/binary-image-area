@@ -15,12 +15,12 @@ export class ImageService {
   /**
    * Canvas...
    */
-  canvas: HTMLCanvasElement;
+  naturalCanvas: HTMLCanvasElement;
 
   /**
    * Canvas context
    */
-  canvasContext: CanvasRenderingContext2D;
+  naturalCanvasContext: CanvasRenderingContext2D;
 
   constructor(
     private validatorService: ImageValidatorService,
@@ -72,6 +72,10 @@ export class ImageService {
     };
   }
 
+  /**
+   * Validate the image
+   * @returns - True if the image is valid
+   */
   private validate(): boolean {
     const { validatorService } = this;
     const imageData = this.getImageData();
@@ -79,17 +83,10 @@ export class ImageService {
     return isValid;
   }
 
-  private getImageData(): ImageData {
-    const { canvas, canvasContext } = this;
-    const imageData = canvasContext.getImageData(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-    return imageData;
-  }
-
+  /**
+   * Initialize the canvas and canvas context
+   * @param image - Image to create the canvas and canvas context
+   */
   private initializeCanvasContext(image: HTMLImageElement): void {
     const { factoryService } = this;
     const canvas = factoryService.createCanvas();
@@ -98,7 +95,22 @@ export class ImageService {
     canvas.height = height;
     const context = canvas.getContext("2d");
     context.drawImage(image, 0, 0, width, height);
-    this.canvas = canvas;
-    this.canvasContext = context;
+    this.naturalCanvas = canvas;
+    this.naturalCanvasContext = context;
+  }
+
+  /**
+   * Get the image data based on the natural canvas/canvas context
+   * @returns - The data in the image
+   */
+  private getImageData(): ImageData {
+    const { naturalCanvas, naturalCanvasContext } = this;
+    const imageData = naturalCanvasContext.getImageData(
+      0,
+      0,
+      naturalCanvas.width,
+      naturalCanvas.height
+    );
+    return imageData;
   }
 }
