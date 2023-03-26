@@ -22,57 +22,53 @@ export class ImageService {
    */
   canvasContext: CanvasRenderingContext2D;
 
-  /**
-   * Handle the service initializing
-   */
-  private initialized$ = new Subject<boolean>();
-
   constructor(
     private validatorService: ImageValidatorService,
     private factoryService: FactoryService
   ) {}
 
   /**
-   * Initialize the service
+   * Read and load the image
    * @param imageFile - Image to load
    * @returns
    */
-  initialize(imageFile: File): Observable<boolean> {
+  read(imageFile: File): Observable<boolean> {
     const { factoryService } = this;
     const image = factoryService.createImage();
+    const isImageRead$ = new Subject<boolean>();
     image.src = URL.createObjectURL(imageFile);
     this.image = image;
-    this.handleOnLoad();
-    this.handleOnError();
-    return this.initialized$.asObservable();
+    this.handleOnLoad(isImageRead$);
+    this.handleOnError(isImageRead$);
+    return isImageRead$.asObservable();
   }
 
   /**
    *  Handle when the uploading of the image has finished
+   * @param isImageRead$ - Handler that notify if the image was read
    */
-  private handleOnLoad(): void {
+  private handleOnLoad(isImageRead$: Subject<boolean>): void {
     const { image } = this;
     image.onload = () => {
       this.initializeCanvasContext(image);
       if (this.validate()) {
-        console.log("valid");
-        return;
+        isImageRead$.next(true);
+      } else {
+        isImageRead$.next(false);
       }
-      console.log("Not valid");
-
-      // this.initialized$.next(true);
-      // this.initialized$.complete();
+      isImageRead$.complete();
     };
   }
 
   /**
    *  Handle when the image could not be loaded
+   * @param isImageRead$ - Handler that notify if the image was read*
    */
-  private handleOnError(): void {
+  private handleOnError(isImageRead$: Subject<boolean>): void {
     const { image } = this;
     image.onerror = () => {
-      this.initialized$.next(false);
-      this.initialized$.complete();
+      isImageRead$.next(false);
+      isImageRead$.complete();
     };
   }
 
