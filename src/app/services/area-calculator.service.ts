@@ -7,6 +7,9 @@ import { getImageDataUtil } from "@app/utils/image.util";
   providedIn: "root",
 })
 export class AreaCalculatorService {
+  /**
+   * Number of points to calculate the area
+   */
   numDots: number = 10000;
 
   constructor(
@@ -14,36 +17,40 @@ export class AreaCalculatorService {
     private factoryService: FactoryService
   ) {}
 
+  /**
+   * Handle the image are calculation
+   * @param canvas - Canvas where is the image
+   * @param canvasContext - Canvas context where is the image
+   * @returns
+   */
   imageArea(
-    naturalCanvas: HTMLCanvasElement,
-    naturalCanvasContext: CanvasRenderingContext2D
+    canvas: HTMLCanvasElement,
+    canvasContext: CanvasRenderingContext2D
   ): [number, HTMLCanvasElement] {
     const { factoryService } = this;
-    const { width, height } = naturalCanvas;
+    const { width, height } = canvas;
     const [dotCanvas, dotsContext] = factoryService.createCanvas2D();
     dotCanvas.width = width;
     dotCanvas.height = height;
     this.drawRandomPoints(dotsContext, width, height);
-    const naturalImageData = this.getImageData(
-      naturalCanvasContext,
-      width,
-      height
-    );
+    const imageData = this.getImageData(canvasContext, width, height);
     const dotsImageData = this.getImageData(dotsContext, width, height);
-    const area = this.calculateArea(naturalImageData, dotsImageData);
+    const area = this.calculateArea(imageData, dotsImageData);
     return [area, dotCanvas];
   }
 
+  /**
+   * Calculate the area
+   * @param imageData - Image data of the image
+   * @param dotsImageData - Image data of the points
+   * @returns Area in px^2
+   */
   private calculateArea(
-    naturalImageData: ImageData,
+    imageData: ImageData,
     dotsImageData: ImageData
   ): number {
     const { numDots, imageValidatorService } = this;
-    const {
-      data: naturalData,
-      width: naturalWidth,
-      height: naturalHeigth,
-    } = naturalImageData;
+    const { data, width, height } = imageData;
 
     const {
       data: dotsData,
@@ -51,38 +58,43 @@ export class AreaCalculatorService {
       height: dotsHeigth,
     } = dotsImageData;
 
-    const naturalDataLen = naturalData.length;
+    const dataLen = data.length;
     const dotsDataLen = dotsData.length;
     let dotsMatached = 0;
 
     if (
-      naturalDataLen === dotsDataLen &&
-      naturalWidth === dotsWidth &&
-      naturalHeigth === dotsHeigth
+      dataLen === dotsDataLen &&
+      width === dotsWidth &&
+      height === dotsHeigth
     ) {
-      for (let i = 0; i < naturalDataLen; i += 4) {
-        const naturalRed = naturalData[i];
+      for (let i = 0; i < dataLen; i += 4) {
+        const red = data[i];
         const dotsRed = dotsData[i];
-        const isNaturalBlackPixel =
-          imageValidatorService.isBlackPixel(naturalRed);
+        const isBlackPixel = imageValidatorService.isBlackPixel(red);
         const isDotBlackPixel = imageValidatorService.isBlackPixel(
           dotsRed - 255
         );
-        if (isNaturalBlackPixel && isNaturalBlackPixel === isDotBlackPixel) {
+        if (isBlackPixel && isBlackPixel === isDotBlackPixel) {
           dotsMatached += 1;
         }
       }
 
-      const area = naturalWidth * naturalHeigth * (dotsMatached / numDots);
+      const area = width * height * (dotsMatached / numDots);
       console.log("Dots matched", dotsMatached);
       console.log("numDots", numDots);
       console.log("area", area);
-      console.log("Iterations", naturalDataLen);
+      console.log("Iterations", dataLen);
       return Number(area.toFixed(2));
     }
     return 0;
   }
 
+  /**
+   * Draw the randow points in canvas using its context
+   * @param context - Context of the canvas wher is going to be draw the points
+   * @param width - Canvas width
+   * @param height - Canvas height
+   */
   private drawRandomPoints(
     context: CanvasRenderingContext2D,
     width: number,
@@ -98,6 +110,13 @@ export class AreaCalculatorService {
     }
   }
 
+  /**
+   * Get the image data of the canvas context
+   * @param conext - Canvas context
+   * @param width - Canvas width
+   * @param height - Canvas height
+   * @returns Image data
+   */
   private getImageData(
     conext: CanvasRenderingContext2D,
     width: number,

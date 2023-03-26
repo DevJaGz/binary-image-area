@@ -46,12 +46,22 @@ export class ImageService {
     return isImageRead$.asObservable();
   }
 
+  /**
+   * Handle the rending of the results
+   * @param viewCanvas - Canvas to render the results
+   * @returns Area
+   */
   renderResults(viewCanvas: HTMLCanvasElement): number {
     const [area, dotCanvas] = this.calculateArea();
     this.renderImage(viewCanvas, dotCanvas);
     return area;
   }
 
+  /**
+   * Render the results in the view
+   * @param viewCanvas - Canvas to render the results
+   * @param dotCanvas - Canvas where the dots were draw
+   */
   private renderImage(
     viewCanvas: HTMLCanvasElement,
     dotCanvas: HTMLCanvasElement
@@ -67,6 +77,10 @@ export class ImageService {
     viewContext.drawImage(dotCanvas, 0, 0, canvasWidth, heighScaled);
   }
 
+  /**
+   * Handle the calculation of the area
+   * @returns Area
+   */
   private calculateArea(): [number, HTMLCanvasElement] {
     const { areaCalculatorService, naturalCanvas, naturalCanvasContext } = this;
     return areaCalculatorService.imageArea(naturalCanvas, naturalCanvasContext);

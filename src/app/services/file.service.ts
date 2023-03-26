@@ -1,10 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FactoryService } from "@app/services/factory.service";
 
-export interface IFileLoderReport {
-  onLoadStart?: () => void;
-}
-
 @Injectable({
   providedIn: "root",
 })
