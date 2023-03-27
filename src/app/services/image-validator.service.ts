@@ -66,7 +66,7 @@ export class ImageValidatorService {
   /**
    * Check if alpha is okay for a binary image
    * @param alpha - Alpha color
-   * @returns True is the alpha okay for a binary image
+   * @returns True for binary image
    */
   private isAlphaOK(alpha: number): boolean {
     return alpha === 255;
