@@ -5,7 +5,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Renderer2,
   ViewChild,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -39,6 +38,25 @@ export class ResultsComponent implements AfterViewInit {
     return null;
   }
 
+  /**
+   * Width of the uploaded image
+   */
+  get imageWidth(): number {
+    const { imageService } = this;
+    return imageService.image?.width ?? 0;
+  }
+
+  /**
+   * Height of the uploaded image
+   */
+  get imageHeight(): number {
+    const { imageService } = this;
+    return imageService.image?.height ?? 0;
+  }
+
+  /**
+   * Area that is shown in the view
+   */
   area = null;
 
   constructor(
@@ -47,7 +65,6 @@ export class ResultsComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private stateService: StateService,
     private router: Router,
-    private render: Renderer2,
     private cd: ChangeDetectorRef
   ) {}
 

@@ -13,7 +13,16 @@
         ></canvas>
       </div>
       <div class="px-0 mt-10 lg:mt-0 lg:px-4 flex-1">
-        <strong>Area</strong> {{ area ?? "---" }} px<sup>2</sup>
+        <div class="p1">
+          <strong>Area:</strong> {{ area ?? "---" }} px<sup>2</sup>
+        </div>
+        <div class="p1"> <strong>Points:</strong> 10000 </div>
+        <div class="p1">
+          <strong>Image width:</strong> {{ imageWidth }} px
+        </div>
+        <div class="p1">
+          <strong>Image height:</strong> {{ imageHeight }} px
+        </div>
       </div>
     </section>
     <footer class="mt-24 pb-10 flex justify-end">

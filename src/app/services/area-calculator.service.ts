@@ -80,10 +80,6 @@ export class AreaCalculatorService {
       }
 
       const area = width * height * (dotsMatached / numDots);
-      console.log("Dots matched", dotsMatached);
-      console.log("numDots", numDots);
-      console.log("area", area);
-      console.log("Iterations", dataLen);
       return Number(area.toFixed(2));
     }
     return 0;
