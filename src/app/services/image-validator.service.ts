@@ -45,8 +45,9 @@ export class ImageValidatorService {
       const red = data[i];
       const green = data[i + 1];
       const blue = data[i + 2];
+      const alpha = data[i + 3];
 
-      if (!this.isSameColor([red, green, blue])) {
+      if (!this.isSameColor([red, green, blue]) || !this.isAlphaOK(alpha)) {
         return false;
       }
     }
@@ -60,5 +61,14 @@ export class ImageValidatorService {
    */
   private isSameColor(colors: number[]): boolean {
     return new Set(colors).size === 1;
+  }
+
+  /**
+   * Check if alpha is okay for a binary image
+   * @param alpha - Alpha color
+   * @returns True is the alpha okay for a binary image
+   */
+  private isAlphaOK(alpha: number): boolean {
+    return alpha === 255;
   }
 }
