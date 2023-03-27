@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { IImageResult } from "@app/interfaces/image.interface";
 import { FactoryService } from "@app/services/factory.service";
 import { ImageValidatorService } from "@app/services/image-validator.service";
 import { getImageDataUtil } from "@app/utils/image.util";
@@ -7,11 +8,6 @@ import { getImageDataUtil } from "@app/utils/image.util";
   providedIn: "root",
 })
 export class AreaCalculatorService {
-  /**
-   * Number of points to calculate the area
-   */
-  numDots: number = 10000;
-
   constructor(
     private imageValidatorService: ImageValidatorService,
     private factoryService: FactoryService
@@ -26,30 +22,37 @@ export class AreaCalculatorService {
   imageArea(
     canvas: HTMLCanvasElement,
     canvasContext: CanvasRenderingContext2D
-  ): [number, HTMLCanvasElement] {
+  ): IImageResult {
     const { factoryService } = this;
     const { width, height } = canvas;
     const [dotCanvas, dotsContext] = factoryService.createCanvas2D();
     dotCanvas.width = width;
     dotCanvas.height = height;
-    this.drawRandomPoints(dotsContext, width, height);
+    const dots = width * height;
+    this.drawRandomPoints(dotsContext, width, height, dots);
     const imageData = this.getImageData(canvasContext, width, height);
     const dotsImageData = this.getImageData(dotsContext, width, height);
-    const area = this.calculateArea(imageData, dotsImageData);
-    return [area, dotCanvas];
+    const area = this.calculateArea(imageData, dotsImageData, dots);
+    return {
+      area,
+      dotCanvas,
+      dots,
+    };
   }
 
   /**
    * Calculate the area
    * @param imageData - Image data of the image
    * @param dotsImageData - Image data of the points
+   * @param dots - Number of dots
    * @returns Area in px^2
    */
   private calculateArea(
     imageData: ImageData,
-    dotsImageData: ImageData
+    dotsImageData: ImageData,
+    dots: number
   ): number {
-    const { numDots, imageValidatorService } = this;
+    const { imageValidatorService } = this;
     const { data, width, height } = imageData;
 
     const {
@@ -79,7 +82,7 @@ export class AreaCalculatorService {
         }
       }
 
-      const area = width * height * (dotsMatached / numDots);
+      const area = width * height * (dotsMatached / dots);
       return Number(area.toFixed(2));
     }
     return 0;
@@ -90,15 +93,15 @@ export class AreaCalculatorService {
    * @param context - Context of the canvas wher is going to be draw the points
    * @param width - Canvas width
    * @param height - Canvas height
+   * @param dots - Number of dots
    */
   private drawRandomPoints(
     context: CanvasRenderingContext2D,
     width: number,
-    height: number
+    height: number,
+    dots: number
   ): void {
-    const { numDots } = this;
-
-    for (let i = 0; i < numDots; i++) {
+    for (let i = 0; i < dots; i++) {
       const x = Math.floor(Math.random() * width);
       const y = Math.floor(Math.random() * height);
       context.fillStyle = "red";

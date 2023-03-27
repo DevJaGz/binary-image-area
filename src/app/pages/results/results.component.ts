@@ -59,6 +59,11 @@ export class ResultsComponent implements AfterViewInit {
    */
   area = null;
 
+  /**
+   * Point number that is shown in the view
+   */
+  points = null;
+
   constructor(
     private imageService: ImageService,
     private loadingService: LoadingService,
@@ -101,7 +106,10 @@ export class ResultsComponent implements AfterViewInit {
    */
   private renderResults(): void {
     const { canvas, imageService } = this;
-    this.area = imageService.renderResults(canvas);
+    const result = imageService.renderResults(canvas);
+    const { area, dots: points } = result;
+    this.area = area;
+    this.points = points;
   }
 
   /**

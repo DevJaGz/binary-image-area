@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { IImageResult } from "@app/interfaces/image.interface";
 import { AreaCalculatorService } from "@app/services/area-calculator.service";
 import { FactoryService } from "@app/services/factory.service";
 import { ImageValidatorService } from "@app/services/image-validator.service";
@@ -15,12 +16,12 @@ export class ImageService {
   image: HTMLImageElement;
 
   /**
-   * Canvas...
+   * Canvas where the image is loaded
    */
   naturalCanvas: HTMLCanvasElement;
 
   /**
-   * Canvas context
+   * Canvas context where the image is loaded
    */
   naturalCanvasContext: CanvasRenderingContext2D;
 
@@ -33,7 +34,7 @@ export class ImageService {
   /**
    * Read and load the image
    * @param imageFile - Image to load
-   * @returns
+   * @returns Observable to notify if the image was loaed
    */
   read(imageFile: File): Observable<boolean> {
     const { factoryService } = this;
@@ -51,10 +52,13 @@ export class ImageService {
    * @param viewCanvas - Canvas to render the results
    * @returns Area
    */
-  renderResults(viewCanvas: HTMLCanvasElement): number {
-    const [area, dotCanvas] = this.calculateArea();
+  renderResults(viewCanvas: HTMLCanvasElement): IImageResult {
+    const { area, dots, dotCanvas } = this.calculateArea();
     this.renderImage(viewCanvas, dotCanvas);
-    return area;
+    return {
+      area,
+      dots,
+    };
   }
 
   /**
@@ -79,9 +83,9 @@ export class ImageService {
 
   /**
    * Handle the calculation of the area
-   * @returns Area
+   * @return Image results
    */
-  private calculateArea(): [number, HTMLCanvasElement] {
+  private calculateArea(): IImageResult {
     const { areaCalculatorService, naturalCanvas, naturalCanvasContext } = this;
     return areaCalculatorService.imageArea(naturalCanvas, naturalCanvasContext);
   }
